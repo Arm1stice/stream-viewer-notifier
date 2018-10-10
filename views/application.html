@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <title>Twitch Viewer Notifier</title>
+    <style>
+        html,
+        body {
+            background-color: #6441a5;
+            color: white;
+            height: 100%
+        }
+        .header{
+            height: 45px;
+            font-size: 22px;
+            padding-left: 7px;
+            padding-top: 5px;
+            border-bottom: 3px solid black;
+        }
+        .min-100 {
+            min-height: 100%;
+        }
+        .notification-dark{
+            color: white;
+            background-color: #192f53;
+            width: 100vw;
+            padding: 10px;
+        }
+        .notification-light{
+            color: #192f53;
+            background-color: white;
+            width: 100vw;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Settings Modal -->
+    <div class="modal" id="usernameModal" tabindex="-1" role="dialog" style="color: black">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Twitch User</h5>
+                </div>
+                <div class="modal-body">
+                    Please enter your Twitch username<br>
+                    <input class="form-control" placeholder="Twitch Username" id="settingsUsername">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id='settingsCancel' data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="settingsSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Bar -->
+
+    <div class='header fixed-top'>
+        Twitch Username: <span id="headerUsername">N/A</span>
+        <button style="float: right; margin-right: 10px;" class="btn btn-sm btn-primary" id="openSettings">Change
+            Username</button>
+        <button style="float: right; margin-right: 10px;" class="btn btn-sm btn-warning" id="debug">Debug</button>
+    </div>
+    <div class="fixed-top" style="padding-left: 7px; padding-bottom: 5px; margin-top: 45px;height:25px;border-bottom: 3px solid black">
+        Chatters: <span id="numberChatters">N/A</span>
+    </div>
+    <div class="container-fluid min-100 d-flex flex-column" style="padding: 0; margin: 0; overflow-x: hidden; overflow-wrap: break-word; overflow-y: hidden;">
+        <div class="row flex-grow-1" style="margin-top: 70px; background-color: #6441a5;">
+            <main class="col flex-grow-1" id="notificationsList">
+                <!-- This is where notifications go -->
+            </main>
+        </div>
+    </div>
+    <script>
+        window.$ = window.jQuery = require("jquery");
+        var axios = require("axios");
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script>
+        var ipcRenderer = require("electron").ipcRenderer;
+        var settings = require("electron").remote.require("electron-settings")
+
+        var username = settings.get('username')
+        var chatters = []
+        $(document).ready(function () {
+            if (username === undefined) {
+                // The user hasn't set their Twitch username, we need to prompt them for this
+                $("#usernameModal").modal({
+                    backdrop: "static",
+                    keyboard: false,
+                    show: true
+                });
+                $("#settingsCancel").hide();
+            } else {
+                reloadData()
+            }
+            ipcRenderer.send("app-ready", true)
+            $("#settingsSave").click(function () {
+                var val = $("#settingsUsername").val()
+                if (val == "") {
+                    alert("You must enter a username")
+                    return
+                } else {
+                    username = val
+                    settings.set("username", val)
+                    $("#usernameModal").modal('hide')
+                    $("#settingsCancel").show()
+                    reloadData()
+                }
+            })
+            $("#openSettings").click(function () {
+                $("#usernameModal").modal({
+                    backdrop: "static",
+                    keyboard: false,
+                    show: true
+                });
+            })
+            $("#debug").click(function(){
+                ipcRenderer.send("app-debug", true)
+            })
+        })
+
+        var timer = null;
+
+        function reloadData() {
+            $("#headerUsername").text(username)
+            $("#notificationsList").empty()
+            if (timer != null) {
+                clearInterval(timer);
+            }
+            timer = setInterval(check, 30000)
+        }
+
+        var notificationColor = false; // False = #192f53 True = White
+        function addNotification(message) {
+            var notification = $("<div class='notification-" + (notificationColor ? "light" : "dark") + "'>" + message +
+                "</div>").hide();
+            notificationColor = !notificationColor;
+            $("#notificationsList").prepend(notification);
+            notification.show('slow');
+        }
+
+        function check() {
+            axios.get("https://tmi.twitch.tv/group/user/" + username + "/chatters").then(function (response) {
+                response = {
+                    "_links": {},
+                    "chatter_count": 1,
+                    "chatters": {
+                        "vips": [],
+                        "moderators": [
+                            "arm1stice"
+                        ],
+                        "staff": [],
+                        "admins": [],
+                        "global_mods": [],
+                        "viewers": []
+                    }
+                }
+                $("#numberChatters").text(response.chatter_count)
+                var newChatters = []
+                newChatters.push(response.chatters.vips)
+                newChatters.push(response.chatters.moderators)
+                newChatters.push(response.chatters.staff)
+                newChatters.push(response.chatters.admins)
+                newChatters.push(response.chatters.global_mods)
+                newChatters.push(response.chatters.viewers)
+
+                var left = []
+                for (var i = 0; i < chatters.length; i++) {
+                    if (newChatters.indexOf(chatters[i]) == -1) {
+                        left.push(chatters[i])
+                    }
+                }
+
+                var joined = []
+                for (var j = 0; j < newChatters.length; j++) {
+                    if (chatters.indexOf(newChatters[j]) == -1) {
+                        joined.push(newChatters[i])
+                    }
+                }
+
+                chatters = newChatters;
+                if (left.length == 0 && joined.length == 0) return;
+
+                var leftString = null;
+                if (left.length != 0) {
+                    leftString = "<b>Left (" + left.length + "):</b> "
+                    for (var k = 0; k < left.length; k++) {
+                        if (k == 0) {
+                            leftString += left[k]
+                        } else if (k == left.length - 1) {
+                            leftString += ", and " + left[k]
+                        } else {
+                            leftString += ", " + left[k]
+                        }
+                    }
+                }
+                var joinedString = null;
+                if (joined.length != 0) {
+                    joinedString = "<b>Joined (" + joined.length + ") :</b> "
+                    for (var l = 0; l < joined.length; l++) {
+                        if (l == 0) {
+                            joinedString += joined[l]
+                        } else if (k == joined.length - 1) {
+                            joinedString += ", and " + joined[l]
+                        } else {
+                            joinedString += ", " + joined[l]
+                        }
+                    }
+                }
+                if (joinedString == null && leftString != null) {
+                    addNotification(leftString)
+                } else if (leftString == null && joinedString != null) {
+                    addNotification(joinedString)
+                } else {
+                    addNotification(joinedString + "<br>" + leftString)
+                }
+            }).catch(function (err) {
+                alert("Error checking for chatters")
+            })
+        }
+    </script>
+</body>
+
+</html>

@@ -1,49 +1,57 @@
 // Import electron modules
-import {app, BrowserWindow} from "electron"
+import { app, BrowserWindow, ipcMain } from "electron"
 
-import * as log from  "electron-log"
+var log = require("electron-log")
+
 import * as path from "path"
 
 // Import auto updater
-import {autoUpdater, NoOpLogger} from "electron-updater";
+import { autoUpdater } from "electron-updater";
 
 // Views path
 var views = path.join(__dirname, "..", "views")
 
-autoUpdater.logger = log
+var loadingWindow: BrowserWindow;
+var applicationWindow: BrowserWindow;
+
+log.transports.console.level = "debug"
+log.transports.file.level = "debug"
+
+
+autoUpdater.logger = null
 
 // Once ready
 app.on("ready", () => {
     // Prepare the loading screen
     log.debug("Application has emitted 'ready'. Preparing loading window")
-    var loadingWindow = new BrowserWindow({
+    loadingWindow = new BrowserWindow({
         width: 400,
         height: 200,
         show: false,
         frame: false
     })
     loadingWindow.loadURL(path.join(views, "loadingScreen.html"))
-    loadingWindow.once("ready-to-show", () => {
+    loadingWindow.webContents.on("did-finish-load", () => {
         loadingWindow.show()
         log.debug("Loading window has indicated that the content is ready to be displayed. Showing...")
 
         // When there is an error checking for updates
         autoUpdater.once("error", (err) => {
-            loadingWindow.webContents.send("updateError", null)
-            setTimeout(function(){
-                log.error("Update error")
-                log.error(err)
-                log.debug("Starting in 5 seconds")
-                autoUpdater.removeAllListeners()
-                // startApplication();
-            })
+            loadingWindow.webContents.send("updateError", true)
+            log.error("Update error")
+            log.error(err)
+            log.debug("Starting in 3 seconds")
+            autoUpdater.removeAllListeners()
+            setTimeout(function () {
+                startApplication();
+            }, 3000)
         })
 
         // When there isn't an update available
         autoUpdater.once("update-not-available", (info) => {
             log.debug("We are already up to date, starting...")
             autoUpdater.removeAllListeners()
-            // startApplication();
+            startApplication();
         });
 
         // When there is an update available
@@ -51,7 +59,7 @@ app.on("ready", () => {
             loadingWindow.webContents.send("updateAvailable", info.version)
             log.debug("An update is available: " + info.version)
         });
-        
+
         // Send progress updates
         autoUpdater.on("download-progress", (info) => {
             loadingWindow.webContents.send("updateProgress", info.percent)
@@ -67,11 +75,10 @@ app.on("ready", () => {
             }, 5000);
         })
 
-        // TODO: autoUpdater.checkForUpdates()
+        autoUpdater.checkForUpdates()
     })
 
 })
-
 
 // Quit once all windows are closed
 app.on("window-all-closed", () => {
@@ -82,3 +89,23 @@ app.on("window-all-closed", () => {
 app.on("before-quit", () => {
     log.debug("Quitting...")
 })
+
+function startApplication() {
+    applicationWindow = new BrowserWindow({
+        width: 750,
+        height: 500,
+        show: false
+    })
+    applicationWindow.loadURL(path.join(views, "application.html"))
+    ipcMain.once("app-ready", () => {
+        loadingWindow.hide();
+        applicationWindow.show();
+        loadingWindow.once("closed", () => {
+            loadingWindow = null;
+        })
+        loadingWindow.close();
+    })
+    ipcMain.on("app-debug", () => {
+        applicationWindow.webContents.openDevTools({mode: "detach"})
+    })
+}
