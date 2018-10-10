@@ -26,9 +26,9 @@
     "dev": "electron-builder --dir && dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\"",
     "run": "dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\""
   },
-  "name": "prosu-beatmaps-client",
+  "name": "twitch-viewer-notifier",
   "version": "0.0.1",
-  "description": "Client for Prosu for Beatmaps",
+  "description": "Twitch Viewer Notifier",
   "main": "./src/index.ts",
   "repository": "https://github.com/wcalandro/twitch-viewer-notifier.git",
   "author": "Wyatt Calandro <wyatt@wcalandro.com>",
