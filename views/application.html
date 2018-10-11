@@ -89,7 +89,7 @@
         var ipcRenderer = require("electron").ipcRenderer;
         var settings = require("electron").remote.require("electron-settings")
 
-        var username = settings.get('username')
+        var username = (settings.get('username')).toString();
         var chatters = []
         $(document).ready(function () {
             if (username === undefined) {
@@ -138,6 +138,7 @@
                 clearInterval(timer);
             }
             timer = setInterval(check, 30000)
+            check();
         }
 
         var notificationColor = false; // False = #192f53 True = White
@@ -150,16 +151,17 @@
         }
 
         function check() {
-            axios.get("https://tmi.twitch.tv/group/user/" + username + "/chatters").then(function (response) {
-
-                $("#numberChatters").text(response.chatter_count)
+            axios.get("https://tmi.twitch.tv/group/user/" + username.toLowerCase() + "/chatters").then(function (response) {
+                var data = response.data
+                console.log(data)
+                $("#numberChatters").text(data.chatter_count)
                 var newChatters = []
-                newChatters.push(response.chatters.vips)
-                newChatters.push(response.chatters.moderators)
-                newChatters.push(response.chatters.staff)
-                newChatters.push(response.chatters.admins)
-                newChatters.push(response.chatters.global_mods)
-                newChatters.push(response.chatters.viewers)
+                newChatters = newChatters.concat(data.chatters.vips)
+                newChatters = newChatters.concat(data.chatters.moderators)
+                newChatters = newChatters.concat(data.chatters.staff)
+                newChatters = newChatters.concat(data.chatters.admins)
+                newChatters = newChatters.concat(data.chatters.global_mods)
+                newChatters = newChatters.concat(data.chatters.viewers)
 
                 var left = []
                 for (var i = 0; i < chatters.length; i++) {
@@ -171,7 +173,7 @@
                 var joined = []
                 for (var j = 0; j < newChatters.length; j++) {
                     if (chatters.indexOf(newChatters[j]) == -1) {
-                        joined.push(newChatters[i])
+                        joined.push(newChatters[j])
                     }
                 }
 
@@ -212,6 +214,7 @@
                     addNotification(joinedString + "<br>" + leftString)
                 }
             }).catch(function (err) {
+                throw err;
                 alert("Error checking for chatters")
             })
         }

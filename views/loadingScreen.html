@@ -55,6 +55,7 @@
 
         ipcRenderer.on("updateAvailable", (event, version) => {
             $("#updateStatus").text(`Downloading ${version}...`)
+            $("#updateProgress").show();
         })
 
         ipcRenderer.on("updateProgress", (event, percent) => {
