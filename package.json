@@ -27,7 +27,7 @@
     "run": "dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\""
   },
   "name": "twitch-viewer-notifier",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Twitch Viewer Notifier",
   "main": "./src/index.ts",
   "repository": "https://github.com/wcalandro/twitch-viewer-notifier.git",
