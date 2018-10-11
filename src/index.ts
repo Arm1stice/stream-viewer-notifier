@@ -109,3 +109,16 @@ function startApplication() {
         applicationWindow.webContents.openDevTools({mode: "detach"})
     })
 }
+
+// Single instance only
+var lock = app.requestSingleInstanceLock()
+if(!lock){
+    app.quit();
+}else{
+    app.on('second-instance', () => {
+        if(applicationWindow != null){
+            applicationWindow.restore();
+            applicationWindow.focus();
+        }
+    });
+}
