@@ -4,7 +4,8 @@
     "productName": "Twitch Viewer Notifier",
     "electronCompile": true,
     "win": {
-      "target": "nsis-web"
+      "target": "nsis-web",
+      "certificateSubjectName": "Wyatt Calandro"
     }
   },
   "devDependencies": {
@@ -27,7 +28,7 @@
     "run": "dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\""
   },
   "name": "twitch-viewer-notifier",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Twitch Viewer Notifier",
   "main": "./src/index.ts",
   "repository": "https://github.com/wcalandro/twitch-viewer-notifier.git",
