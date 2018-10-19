@@ -4,7 +4,7 @@
     "productName": "Twitch Viewer Notifier",
     "electronCompile": true,
     "win": {
-      "target": "nsis-web",
+      "target": "squirrel",
       "certificateSubjectName": "Wyatt Calandro"
     }
   },
@@ -32,7 +32,7 @@
     "pub": "electron-builder --publish always"
   },
   "name": "twitch-viewer-notifier",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Twitch Viewer Notifier",
   "main": "./src/index.ts",
   "repository": "https://github.com/wcalandro/twitch-viewer-notifier.git",
