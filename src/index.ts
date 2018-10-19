@@ -98,7 +98,6 @@ function startApplication() {
         show: false
     })
     applicationWindow.loadURL(path.join(views, "application.html"))
-    applicationWindow.webContents.openDevTools({mode: "detach"})
     log.debug("Loading the page...")
     ipcMain.once("app-ready", () => {
         log.debug("Page called 'ready'")
