@@ -17,8 +17,6 @@ var applicationWindow: BrowserWindow;
 log.transports.console.level = "debug"
 log.transports.file.level = "debug"
 
-if(require('electron-squirrel-startup')) app.quit();
-
 autoUpdater.logger = null
 // Once ready
 app.on("ready", () => {
@@ -34,11 +32,6 @@ app.on("ready", () => {
     loadingWindow.webContents.on("did-finish-load", () => {
         loadingWindow.show()
         log.debug("Loading window has indicated that the content is ready to be displayed. Showing...")
-
-        if(process.argv[1] == "--squirrel-firstrun"){
-            startApplication();
-            return
-        }
 
         // When there is an error checking for updates
         autoUpdater.once("error", (err) => {
