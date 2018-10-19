@@ -2,6 +2,8 @@ var settings = require("electron").remote.require("electron-settings")
 
 var username = settings.get('username')
 var chatters = []
+var escape = require("escape-html")
+
 $(document).ready(function () {
     if (username === undefined) {
         // The user hasn't set their Twitch username, we need to prompt them for this
@@ -94,11 +96,11 @@ function check() {
             leftString = "<b>Left (" + left.length + "):</b> "
             for (var k = 0; k < left.length; k++) {
                 if (k == 0) {
-                    leftString += left[k]
+                    leftString += escape(left[k])
                 } else if (k == left.length - 1) {
-                    leftString += ", and " + left[k]
+                    leftString += ", and " + escape(left[k])
                 } else {
-                    leftString += ", " + left[k]
+                    leftString += ", " + escape(left[k])
                 }
             }
         }
@@ -107,11 +109,11 @@ function check() {
             joinedString = "<b>Joined (" + joined.length + ") :</b> "
             for (var l = 0; l < joined.length; l++) {
                 if (l == 0) {
-                    joinedString += joined[l]
+                    joinedString += escape(joined[l])
                 } else if (k == joined.length - 1) {
-                    joinedString += ", and " + joined[l]
+                    joinedString += ", and " + escape(joined[l])
                 } else {
-                    joinedString += ", " + joined[l]
+                    joinedString += ", " + escape(joined[l])
                 }
             }
         }
