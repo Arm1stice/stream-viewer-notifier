@@ -36,9 +36,6 @@ $(document).ready(function () {
             show: true
         });
     })
-    $("#debug").click(function () {
-        ipcRenderer.send("app-debug", true)
-    })
 })
 
 var timer = null;

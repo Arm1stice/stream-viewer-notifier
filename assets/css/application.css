@@ -1,0 +1,36 @@
+html,
+body {
+    background-color: #6441a5;
+    color: white;
+    height: 100%
+}
+
+.header {
+    height: 45px;
+    font-size: 22px;
+    padding-left: 7px;
+    padding-top: 5px;
+    border-bottom: 3px solid black;
+}
+
+.min-100 {
+    min-height: 100%;
+}
+
+.notification-dark {
+    color: white;
+    background-color: #192f53;
+    width: 100vw;
+    padding: 10px;
+}
+
+.notification-light {
+    color: #192f53;
+    background-color: white;
+    width: 100vw;
+    padding: 10px;
+}
+
+.above-all {
+    z-index: 2;
+}
