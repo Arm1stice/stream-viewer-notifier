@@ -28,7 +28,8 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dev": "electron-builder --dir && dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\"",
-    "run": "dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\""
+    "run": "dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\"",
+    "pub": "electron-builder --publish always"
   },
   "name": "twitch-viewer-notifier",
   "version": "0.0.8",
