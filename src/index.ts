@@ -91,16 +91,21 @@ app.on("before-quit", () => {
 })
 
 function startApplication() {
+    log.debug("Starting application...")
     applicationWindow = new BrowserWindow({
         width: 750,
         height: 500,
         show: false
     })
     applicationWindow.loadURL(path.join(views, "application.html"))
+    applicationWindow.webContents.openDevTools({mode: "detach"})
+    log.debug("Loading the page...")
     ipcMain.once("app-ready", () => {
+        log.debug("Page called 'ready'")
         loadingWindow.hide();
         applicationWindow.show();
         loadingWindow.once("closed", () => {
+            log.debug("Loading window closed")
             loadingWindow = null;
         })
         loadingWindow.close();

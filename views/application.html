@@ -36,6 +36,9 @@
             width: 100vw;
             padding: 10px;
         }
+        .above-all{
+            z-index: 2;
+        }
     </style>
 </head>
 
@@ -61,13 +64,13 @@
 
     <!-- Header Bar -->
 
-    <div class='header fixed-top'>
+    <div class='header fixed-top above-all'>
         Twitch Username: <span id="headerUsername">N/A</span>
         <button style="float: right; margin-right: 10px;" class="btn btn-sm btn-primary" id="openSettings">Change
             Username</button>
         <button style="float: right; margin-right: 10px;" class="btn btn-sm btn-warning" id="debug">Debug</button>
     </div>
-    <div class="fixed-top" style="padding-left: 7px; padding-bottom: 5px; margin-top: 45px;height:25px;border-bottom: 3px solid black">
+    <div class="fixed-top above-all" style="padding-left: 7px; padding-bottom: 5px; margin-top: 45px;height:25px;border-bottom: 3px solid black">
         Chatters: <span id="numberChatters">N/A</span>
     </div>
     <div class="container-fluid min-100 d-flex flex-column" style="padding: 0; margin: 0; overflow-x: hidden; overflow-wrap: break-word; overflow-y: hidden; position: fixed;">
@@ -89,7 +92,7 @@
         var ipcRenderer = require("electron").ipcRenderer;
         var settings = require("electron").remote.require("electron-settings")
 
-        var username = (settings.get('username')).toString();
+        var username = settings.get('username')
         var chatters = []
         $(document).ready(function () {
             if (username === undefined) {
