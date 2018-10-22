@@ -9,7 +9,8 @@
     },
     "nsisWeb": {
       "differentialPackage": true,
-      "artifactName": "${productName} Setup ${version}.${ext}"
+      "artifactName": "TVN Setup v${version}.${ext}",
+      "shortcutName": "TVN v${version}"
     }
   },
   "devDependencies": {
