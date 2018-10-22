@@ -4,7 +4,7 @@
     "productName": "Twitch Viewer Notifier",
     "electronCompile": true,
     "win": {
-      "target": "nsis",
+      "target": "nsis-web",
       "certificateSubjectName": "Wyatt Calandro"
     }
   },
