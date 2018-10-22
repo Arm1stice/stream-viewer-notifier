@@ -58,12 +58,6 @@ app.on("ready", () => {
             log.debug("An update is available: " + info.version)
         });
 
-        // Send progress updates
-        autoUpdater.on("download-progress", (info) => {
-            loadingWindow.webContents.send("updateProgress", info.percent)
-            log.debug("Update progress: " + info.progress + "% (" + info.transferred + "/" + info.total + ")")
-        })
-
         // Once downloaded, send to the client, then quit after 5 seconds
         autoUpdater.on("update-downloaded", () => {
             loadingWindow.webContents.send("updateDownloaded", true)

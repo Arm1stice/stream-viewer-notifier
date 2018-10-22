@@ -6,6 +6,10 @@
     "win": {
       "target": "nsis-web",
       "certificateSubjectName": "Wyatt Calandro"
+    },
+    "nsisWeb": {
+      "differentialPackage": true,
+      "artifactName": "${productName} Setup ${version}.${ext}"
     }
   },
   "devDependencies": {
@@ -33,7 +37,7 @@
     "pub": "electron-builder --publish always"
   },
   "name": "twitch-viewer-notifier",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Twitch Viewer Notifier",
   "main": "./src/index.ts",
   "repository": "https://github.com/wcalandro/twitch-viewer-notifier.git",
