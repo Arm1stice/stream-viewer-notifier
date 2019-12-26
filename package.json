@@ -4,8 +4,7 @@
     "productName": "Twitch Viewer Notifier",
     "electronCompile": true,
     "win": {
-      "target": "nsis-web",
-      "certificateSubjectName": "Wyatt Calandro"
+      "target": "nsis-web"
     },
     "nsisWeb": {
       "differentialPackage": true,
@@ -14,7 +13,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^3.0.3",
+    "electron": "^4.0.0",
     "electron-builder": "^20.28.4",
     "electron-compilers": "^5.9.0"
   },
@@ -23,7 +22,7 @@
     "electron-compile": "^6.4.3",
     "electron-log": "^2.2.17",
     "electron-settings": "^3.2.0",
-    "electron-updater": "^3.1.2",
+    "electron-updater": "^4.0.0",
     "escape-html": "^1.0.3",
     "jquery": "^3.3.1",
     "keyboardjs": "^2.4.1",
