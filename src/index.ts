@@ -33,18 +33,6 @@ app.on("ready", () => {
         loadingWindow.show()
         log.debug("Loading window has indicated that the content is ready to be displayed. Showing...")
 
-        // When there is an error checking for updates
-        autoUpdater.once("error", (err) => {
-            loadingWindow.webContents.send("updateError", true)
-            log.error("Update error")
-            log.error(err)
-            log.debug("Starting in 3 seconds")
-            autoUpdater.removeAllListeners()
-            setTimeout(function () {
-                startApplication();
-            }, 3000)
-        })
-
         // When there isn't an update available
         autoUpdater.once("update-not-available", (info) => {
             log.debug("We are already up to date, starting...")
@@ -67,7 +55,18 @@ app.on("ready", () => {
             }, 5000);
         })
 
-        autoUpdater.checkForUpdates()
+        autoUpdater
+        .checkForUpdates()
+        .catch(err => {
+            loadingWindow.webContents.send("updateError", true)
+            log.error("Update error")
+            log.error(err)
+            log.debug("Starting in 3 seconds")
+            autoUpdater.removeAllListeners()
+            setTimeout(function () {
+                startApplication();
+            }, 3000)
+        })
     })
 
 })
