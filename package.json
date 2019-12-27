@@ -1,15 +1,15 @@
 {
   "build": {
-    "appId": "com.arm1stice.twitch-viewer-notifier",
-    "productName": "Twitch Viewer Notifier",
+    "appId": "com.arm1stice.stream-viewer-notifier",
+    "productName": "Stream Viewer Notifier",
     "electronCompile": true,
     "win": {
       "target": "nsis-web"
     },
     "nsisWeb": {
       "differentialPackage": true,
-      "artifactName": "TVN Setup v${version}.${ext}",
-      "shortcutName": "TVN v${version}"
+      "artifactName": "Stream Viewer Notifier Setup v${version}.${ext}",
+      "shortcutName": "Stream Viewer Notifier"
     }
   },
   "devDependencies": {
@@ -31,15 +31,15 @@
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "dev": "electron-builder --dir && dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\"",
-    "run": "dist\\win-unpacked\\\"Twitch Viewer Notifier.exe\"",
+    "dev": "electron-builder --dir && dist\\win-unpacked\\\"Stream Viewer Notifier.exe\"",
+    "run": "dist\\win-unpacked\\\"Stream Viewer Notifier.exe\"",
     "pub": "electron-builder --publish always"
   },
-  "name": "twitch-viewer-notifier",
-  "version": "0.0.13",
-  "description": "Twitch Viewer Notifier",
+  "name": "stream-viewer-notifier",
+  "version": "0.0.14",
+  "description": "Stream Viewer Notifier",
   "main": "./src/index.ts",
-  "repository": "https://github.com/wcalandro/twitch-viewer-notifier.git",
+  "repository": "https://github.com/wcalandro/stream-viewer-notifier.git",
   "author": "Wyatt Calandro <wyatt@wcalandro.com>",
   "license": "GPL-3.0-only",
   "private": false
